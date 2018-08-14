@@ -1,0 +1,9 @@
+Tests: python
+Depends: python-gpg
+
+Tests: python3
+Depends: python3-gpg
+
+Tests: python3.6
+Depends: python3.6, python3-gpg
+

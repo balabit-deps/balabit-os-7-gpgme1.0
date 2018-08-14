@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec python debian/tests/python-gpg

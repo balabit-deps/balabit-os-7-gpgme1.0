@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export QT_SELECT := qt5
+
+%:
+	dh $@ --with python2,python3
+
+override_dh_auto_configure:
+	# clean up old location for python source (remove after 1.9.1 is released)
+	rm -rf lang/python/gpg
+	dh_auto_configure -- \
+	    --enable-static \
+	    --enable-languages="python cpp qt" \
+	    PYTHON_VERSIONS="2.7 3.5 3.6" \
+	    --infodir=/usr/share/info
+
+override_dh_install:
+	dh_install --list-missing -X.la -Xinfo/dir -X.pyc -Xinstall_files.txt -X__pycache__
+
+override_dh_makeshlibs:
+	dh_makeshlibs -V
+
+override_dh_installdocs:
+	dh_installdocs -X.md5

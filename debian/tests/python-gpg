@@ -1,0 +1,6 @@
+# -*- python -*-
+# this will be loaded by different versions of python as a smoke test
+
+import gpg
+
+c = gpg.Context()

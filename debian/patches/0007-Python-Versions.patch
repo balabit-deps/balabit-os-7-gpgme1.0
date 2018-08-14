@@ -1,0 +1,68 @@
+Description: Use py{,3}versions detection.
+Author: Adam Conrad <adconrad@ubuntu.com>
+Last-Update: 2018-01-15
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -402,6 +402,7 @@ if test "$found_py" = "1" -o "$found_py2
+ 	PYTHONS=
+ 	PYTHON_VERSIONS=
+ 	unset PYTHON
++	unset PYTHON_INTERPS
+ 	unset PYTHON_VERSION
+ 	unset PYTHON_CPPFLAGS
+ 	unset PYTHON_LDFLAGS
+@@ -416,18 +417,21 @@ if test "$found_py" = "1" -o "$found_py2
+ 	unset am_cv_python_pyexecdir
+ 
+ 	if test "$found_py" = "1" -o "$found_py2" = "1"; then
+-	    AM_PATH_PYTHON([2.7], [
+-		AX_PYTHON_DEVEL
++		for i in $(pyversions -vr); do
++			PYTHON="/usr/bin/python$i";
++			PYTHON_INTERPS="$(echo $PYTHON_INTERPS $PYTHON)";
++			PYTHON_VERSION="$(echo $i $PYTHON_VERSION)";
++		done
+ 		if test "$PYTHON_VERSION"; then
+-			PYTHONS="$(echo $PYTHONS $PYTHON)"
++			PYTHONS="$(echo $PYTHONS $PYTHON_INTERPS)"
+ 			PYTHON_VERSIONS="$(echo $PYTHON_VERSIONS $PYTHON_VERSION)"
+ 		fi
+-	    ], :)
+ 	fi
+ 
+ 	if test "$found_py" = "1" -o "$found_py3" = "1"; then
+ 	    # Reset everything, so that we can look for another Python.
+ 	    unset PYTHON
++	    unset PYTHON_INTERPS
+ 	    unset PYTHON_VERSION
+ 	    unset PYTHON_CPPFLAGS
+ 	    unset PYTHON_LDFLAGS
+@@ -440,13 +444,15 @@ if test "$found_py" = "1" -o "$found_py2
+ 	    unset am_cv_python_platform
+ 	    unset am_cv_python_pythondir
+ 	    unset am_cv_python_pyexecdir
+-	    AM_PATH_PYTHON([3.4], [
+-		AX_PYTHON_DEVEL
++	    for i in $(py3versions -vr); do
++			PYTHON="/usr/bin/python$i";
++			PYTHON_INTERPS="$(echo $PYTHON_INTERPS $PYTHON)";
++			PYTHON_VERSION="$(echo $i $PYTHON_VERSION)";
++	    done
+ 		if test "$PYTHON_VERSION"; then
+-			PYTHONS="$(echo $PYTHONS $PYTHON)"
++			PYTHONS="$(echo $PYTHONS $PYTHON_INTERPS)"
+ 			PYTHON_VERSIONS="$(echo $PYTHON_VERSIONS $PYTHON_VERSION)"
+ 		fi
+-	    ], :)
+ 	fi
+ 
+ 	# Recover some values lost in the second attempt to find Python.
+@@ -471,6 +477,7 @@ if test "$found_py" = "1" -o "$found_py2
+             fi
+ 	fi
+ 
++	AC_SUBST(PYTHON, $PYTHON)
+ 	AC_SUBST(PYTHONS, $PYTHONS)
+     fi
+ fi
