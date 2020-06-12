@@ -1,3 +1,10 @@
+gpgme1.0 (1.10.0-1ubuntu2.1) bionic; urgency=medium
+
+  * qt-Use-tofu-conflict-test-keys-without-expiry.patch: Cherry pick
+    upstream fix for expiry dates in test suite (LP: #1813581)
+
+ -- Julian Andres Klode <juliank@ubuntu.com>  Mon, 12 Aug 2019 11:16:50 +0200
+
 gpgme1.0 (1.10.0-1ubuntu2) bionic; urgency=medium
 
   * Make debian/libgpgme-dev.links executable, it uses dh-exec (LP: #1762384)
